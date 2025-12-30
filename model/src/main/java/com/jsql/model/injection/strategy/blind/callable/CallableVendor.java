@@ -46,7 +46,7 @@ public class CallableVendor extends AbstractCallableBit<CallableVendor> {
         CallableVendor.DIFF_MATCH_PATCH.diffCleanupEfficiency(this.opcodes);
         return this;
     }
-    
+
     public List<Diff> getOpcodes() {
         return this.opcodes;
     }

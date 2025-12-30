@@ -101,7 +101,7 @@ public class CallableBlindBin extends AbstractCallableBit<CallableBlindBin> {
         CallableBlindBin.DIFF_MATCH_PATCH.diffCleanupEfficiency(this.diffsWithReference);
         return this;
     }
-    
+
     public List<Diff> getDiffsWithReference() {
         return this.diffsWithReference;
     }
