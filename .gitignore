@@ -10,6 +10,7 @@ test-output/
 dependency-reduced-pom.xml
 build.xml
 jsql-sqlite-its.db
+jsql-duckdb-its.db
 derby.log
 .idea/
 *.iml

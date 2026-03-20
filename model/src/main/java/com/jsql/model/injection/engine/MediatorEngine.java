@@ -45,6 +45,7 @@ public class MediatorEngine {
     private final Engine cubrid;
     private final Engine db2;
     private final Engine derby;
+    private final Engine duckdb;
     private final Engine exasol;
     private final Engine firebird;
     private final Engine h2;
@@ -90,6 +91,7 @@ public class MediatorEngine {
         this.clickhouse = new Engine(new EngineYaml("clickhouse.yml", injectionModel));
         this.db2 = new Engine(new EngineYaml("db2.yml", injectionModel));
         this.derby = new Engine(new EngineYaml("derby.yml", injectionModel));
+        this.duckdb = new Engine(new EngineYaml("duckdb.yml", injectionModel));
         this.exasol = new Engine(new EngineYaml("exasol.yml", injectionModel));
         this.firebird = new Engine(new EngineYaml("firebird.yml", injectionModel));
         this.h2 = new Engine(new EngineYaml("h2.yml", injectionModel));
@@ -141,7 +143,7 @@ public class MediatorEngine {
         this.virtuoso = new Engine(new EngineYaml("virtuoso.yml", injectionModel));
 
         this.engines = Arrays.asList(
-            this.auto, access, this.altibase, this.clickhouse, ctreeace, this.cubrid, this.db2, this.derby, this.exasol, this.firebird,
+            this.auto, this.access, this.altibase, this.clickhouse, ctreeace, this.cubrid, this.db2, this.derby, this.duckdb, this.exasol, this.firebird,
             frontbase, this.h2, this.hana, this.hsqldb, this.informix, ingres, iris, maxdb, this.mckoi, this.mimer, this.monetdb,
             this.mysql, this.neo4j, netezza, nuodb, this.oracle, this.postgres, this.presto, this.spanner, this.sqlite, this.sqlserver,
             this.sybase, teradata, this.vertica, this.virtuoso
@@ -150,7 +152,7 @@ public class MediatorEngine {
             this.mysql, this.postgres, this.sqlite, this.h2, this.hsqldb, this.oracle, this.sqlserver, this.spanner, this.access, this.altibase,
             ctreeace, this.cubrid, this.db2, this.derby, this.exasol, this.firebird, frontbase, this.hana, this.informix, ingres, iris, maxdb,
             this.mckoi, this.mimer, this.monetdb, this.neo4j, netezza, nuodb, this.presto, this.sybase, teradata, this.vertica, this.virtuoso,
-            this.clickhouse
+            this.duckdb, this.clickhouse
         );
 
         this.engine = this.mysql;
@@ -279,6 +281,10 @@ public class MediatorEngine {
 
     public Engine getDerby() {
         return this.derby;
+    }
+
+    public Engine getDuckdb() {
+        return this.duckdb;
     }
 
     public Engine getExasol() {

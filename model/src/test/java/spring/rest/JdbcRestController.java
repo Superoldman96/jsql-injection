@@ -58,6 +58,17 @@ public class JdbcRestController {
         );
     }
 
+    @RequestMapping("/duckdb")
+    public Greeting greetingDuckdb(@RequestParam(value="name") String name) {
+        String inject = name.replace(":", "\\:");
+        return this.getGreeting(
+            SpringApp.get("duckdb").getProperty(JdbcSettings.JAKARTA_JDBC_URL),
+            SpringApp.get("duckdb").getProperty(JdbcSettings.JAKARTA_JDBC_USER),
+            SpringApp.get("duckdb").getProperty(JdbcSettings.JAKARTA_JDBC_PASSWORD),
+            "select schema_name from information_schema.schemata where '1' = '" + inject + "'"
+        );
+    }
+
     @RequestMapping("/exasol")
     public Greeting greetingExasol(@RequestParam(value="name") String name) {
         String inject = name.replace(":", "\\:");
@@ -144,6 +155,18 @@ public class JdbcRestController {
             SpringApp.get("presto").getProperty(JdbcSettings.JAKARTA_JDBC_USER),
             SpringApp.get("presto").getProperty(JdbcSettings.JAKARTA_JDBC_PASSWORD),
             "select schema_name from INFORMATION_SCHEMA.SCHEMATA where '1' = '"+ inject +"'"
+        );
+    }
+
+    @RequestMapping("/spanner")
+    public Greeting greetingSpanner(@RequestParam(value="name") String name) throws ClassNotFoundException {
+        Class.forName("com.google.cloud.spanner.jdbc.JdbcDriver");
+        String inject = name.replace(":", "\\:");
+        return this.getGreeting(
+            SpringApp.get("spanner").getProperty(JdbcSettings.JAKARTA_JDBC_URL),
+            null,
+            null,
+            "select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA where '1' = '"+ inject +"'"
         );
     }
 
@@ -267,18 +290,6 @@ public class JdbcRestController {
             "admin",
             "password",
             "select schema_name from schemata where '1' = '"+ inject +"'"
-        );
-    }
-
-    @RequestMapping("/spanner")
-    public Greeting greetingSpanner(@RequestParam(value="name") String name) throws ClassNotFoundException {
-        Class.forName("com.google.cloud.spanner.jdbc.JdbcDriver");
-        String inject = name.replace(":", "\\:");
-        return this.getGreeting(
-            "jdbc:cloudspanner://jsql-spanner:9010/projects/test-project/instances/test-instance/databases/test-db;autoConfigEmulator=true;usePlainText=true",
-            null,
-            null,
-            "select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA where '1' = '"+ inject +"'"
         );
     }
 

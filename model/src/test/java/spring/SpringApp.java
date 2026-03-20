@@ -32,10 +32,7 @@ import spring.rest.StudentForDelete;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -95,6 +92,7 @@ public class SpringApp {
     public static void initDatabases() throws Exception {
         LOGGER.info("Current testProfile: {}", System.getProperty(SpringApp.TEST_PROFILE));
         SpringApp.initH2();
+        SpringApp.initDuckdb();
         if (SpringApp.TEST_PROFILE_MAIN.equals(System.getProperty(SpringApp.TEST_PROFILE))) {
             SpringApp.initHsqldb();
             SpringApp.initNeo4j();
@@ -129,6 +127,16 @@ public class SpringApp {
                 LOGGER.error(e, e);
             }
         });
+    }
+
+    private static void initDuckdb() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:duckdb:jsql-duckdb-its.db");
+        Statement stmt = conn.createStatement();
+        stmt.execute("drop table if exists main.items");
+        stmt.execute("CREATE TABLE items (item VARCHAR, value DECIMAL(10, 2), count INTEGER)");
+        stmt.execute("INSERT INTO items VALUES ('jeans', 20.0, 1)");
+        stmt.close();
+        conn.close();
     }
 
     private static void initDerby() throws Exception {

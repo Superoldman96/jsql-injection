@@ -56,6 +56,7 @@
         <cubrid.version>11.3.2.0053</cubrid.version>
         <db2.version>12.1.4.0</db2.version>
         <derby.version>10.17.1.0</derby.version>
+        <duckdb.version>1.5.0.0</duckdb.version>
         <exasol.version>26.2.7</exasol.version>
         <firebird.version>6.0.4</firebird.version>
         <h2.version>2.4.240</h2.version>
@@ -74,7 +75,7 @@
         <oracle.version>23.26.1.0.0</oracle.version>
         <postgres.version>42.7.10</postgres.version>
         <presto.version>0.296</presto.version>
-        <sqlite.version>3.51.2.0</sqlite.version>
+        <sqlite.version>3.51.3.0</sqlite.version>
         <sybase.version>16.0</sybase.version>
         <vertica.version>25.3.0-0</vertica.version>
         <virtuoso.version>6.0.0-tp1</virtuoso.version>
@@ -443,6 +444,12 @@
             <groupId>org.apache.derby</groupId>
             <artifactId>derbyclient</artifactId>
             <version>${derby.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.duckdb</groupId>
+            <artifactId>duckdb_jdbc</artifactId>
+            <version>${duckdb.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

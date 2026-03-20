@@ -1,4 +1,4 @@
-package com.test.engine.sqlserver;
+package com.test.engine.spanner;
 
 import com.jsql.model.InjectionModel;
 import com.jsql.model.exception.JSqlException;
@@ -7,11 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junitpioneer.jupiter.RetryingTest;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-class SqlserverExploitSuiteIT extends ConcreteSqlserverSuiteIT {
+class SpannerBlindBitSuiteIT extends ConcreteSpannerSuiteIT {
     
     @Override
     public void setupInjection() throws Exception {
@@ -21,7 +17,7 @@ class SqlserverExploitSuiteIT extends ConcreteSqlserverSuiteIT {
         model.subscribe(new SubscriberLogger(model));
 
         model.getMediatorUtils().parameterUtil().initQueryString(
-            "http://localhost:8080/union?tenant=sqlserver&name="
+            "http://localhost:8080/spanner?name="
         );
 
         model.setIsScanning(true);
@@ -29,8 +25,9 @@ class SqlserverExploitSuiteIT extends ConcreteSqlserverSuiteIT {
         model
         .getMediatorUtils()
         .preferencesUtil()
-        .withIsCheckingAllURLParam(false);
-        
+        .withIsStrategyBlindBinDisabled(true)
+        .withIsStrategyUnionDisabled(true);
+
         model
         .getMediatorUtils()
         .connectionUtil()
@@ -40,20 +37,16 @@ class SqlserverExploitSuiteIT extends ConcreteSqlserverSuiteIT {
         model.beginInjection();
     }
 
+    @Override
     @RetryingTest(3)
-    public void readFile() throws JSqlException, ExecutionException, InterruptedException {
-        List<String> contents = this.injectionModel.getResourceAccess().readFile(
-            Collections.singletonList("/etc/passwd")
-        );
-        String toFind = "mssql:x:10001:0::/home/mssql:/bin/bash";
-        LOGGER.info("ReadFile: found {}, to find {}", String.join(",", contents).trim(), toFind);
-        Assertions.assertTrue(String.join(",", contents).trim().contains(toFind));
+    public void listValues() throws JSqlException {
+        super.listValues();
     }
 
     @AfterEach
     void afterEach() {
         Assertions.assertEquals(
-            this.injectionModel.getMediatorStrategy().getUnion(),
+            this.injectionModel.getMediatorStrategy().getBlindBit(),
             this.injectionModel.getMediatorStrategy().getStrategy()
         );
     }

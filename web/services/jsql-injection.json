@@ -7,7 +7,7 @@
         "[Level 2] Strategy: Dns (https://github.com/ron190/jsql-injection/wiki/Strategy#7-dns--and-callselectbobcom)",
         "[Level 3] Reverse shell (https://github.com/ron190/jsql-injection/wiki/Reverse-shell)",
         "[Level ?] Deep... lost... Buffer overflow ? alone... so cold...",
-        "[Contribute?] Create your pull request : many mysql and postgres clones to cover, testing on docker using python and .NET endpoints, or any other topic",
+        "[Contribute?] Create your pull request : many mysql and postgres clones to cover, testing on docker using python and .NET endpoints, any other topic",
         "[Pinned] Report any bugs and thoughts, add your star at https://github.com/ron190/jsql-injection"
     ]
 }
