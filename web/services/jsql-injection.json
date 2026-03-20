@@ -8,13 +8,6 @@
         "[Level 3] Reverse shell (https://github.com/ron190/jsql-injection/wiki/Reverse-shell)",
         "[Level ?] Deep... lost... Buffer overflow ? alone... so cold...",
         "[Contribute?] Create your pull request : many mysql and postgres clones to cover, testing on docker using python and .NET endpoints, or any other topic",
-        "[Pinned] Report any bugs and thoughts, add your star at https://github.com/ron190/jsql-injection",
-        "",
-        "░   ░░░  ░        ░░      ░░       ░░░      ░░       ░░  ░░░░  ░░      ░░░      ░░        ░░      ░░        ░",
-        "▒    ▒▒  ▒  ▒▒▒▒▒▒▒  ▒▒▒▒  ▒  ▒▒▒▒  ▒  ▒▒▒▒  ▒  ▒▒▒▒  ▒  ▒▒▒▒  ▒  ▒▒▒▒  ▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒",
-        "▓  ▓  ▓  ▓      ▓▓▓  ▓▓▓▓▓▓▓       ▓▓  ▓▓▓▓  ▓       ▓▓        ▓  ▓▓▓▓  ▓  ▓▓▓   ▓▓▓▓  ▓▓▓▓▓      ▓▓▓▓▓  ▓▓▓▓",
-        "█  ██    █  ███████  ████  █  ███  ██  ████  █  ███████  ████  █        █  ████  ████  ██████████  ████  ████",
-        "█  ███   █        ██      ██  ████  ██      ██  ███████  ████  █  ████  ██      ██        ██      █████  ████",
-        "[Subtle music starts flowing and rolling to your ears, light and soft classical arrangements. Also free ad. No, you can't put car ads here]"
+        "[Pinned] Report any bugs and thoughts, add your star at https://github.com/ron190/jsql-injection"
     ]
 }
