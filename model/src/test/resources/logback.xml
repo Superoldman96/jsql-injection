@@ -19,4 +19,5 @@
     <!-- Hide XPATH syntax error on SQL containing unicode -->
     <logger name="com.zaxxer.hikari.pool.ProxyConnection" level="OFF" additivity="false" />
     <logger name="com.clickhouse.jdbc.internal.parser.javacc.ClickHouseSqlParser" level="OFF" additivity="false" />
+    <logger name="org.mariadb.jdbc.message.server" level="OFF" additivity="false" />
 </configuration>

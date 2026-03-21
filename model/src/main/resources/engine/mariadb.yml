@@ -1,0 +1,13 @@
+engine: MariaDB
+clone: mysql.yml
+
+strategy:
+ configuration:
+  fingerprint:
+   errorMessage:
+    - You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '.*' at line \\d+
+    - mariadb
+   orderByErrorMessage:
+    - Unknown column '1337' in 'ORDER BY'
+   engineSpecific: if(${test}, binary('a'), 'b')=binary('a')
+ error:  # mariadb returns too much garbling chars

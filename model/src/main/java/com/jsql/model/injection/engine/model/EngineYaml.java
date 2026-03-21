@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
@@ -106,10 +107,32 @@ public class EngineYaml implements AbstractEngine {
     public EngineYaml(String fileYaml, InjectionModel injectionModel) {
         this.injectionModel = injectionModel;
         var yaml = new Yaml();
-        this.modelYaml = yaml.loadAs(
+        var modelYaml = yaml.loadAs(
             EngineYaml.class.getClassLoader().getResourceAsStream("engine/" + fileYaml),
             ModelYaml.class
         );
+        if (!modelYaml.getClone().isBlank()) {
+            Map<String, Object> originFile = yaml.load(EngineYaml.class.getClassLoader().getResourceAsStream("engine/" + modelYaml.getClone()));
+            Map<String, Object> cloneFile = yaml.load(EngineYaml.class.getClassLoader().getResourceAsStream("engine/" + fileYaml));
+            EngineYaml.mergeMaps(originFile, cloneFile);
+            String yamlString = yaml.dump(originFile);
+            modelYaml = yaml.loadAs(yamlString, ModelYaml.class);
+        }
+        this.modelYaml = modelYaml;
+    }
+
+    private static void mergeMaps(Map<String, Object> mapOrigin, Map<String, Object> mapClone) {
+        for (Map.Entry<String, Object> entryClone: mapClone.entrySet()) {
+            if (
+                mapOrigin.containsKey(entryClone.getKey())
+                && mapOrigin.get(entryClone.getKey()) instanceof Map mapOriginToOverride
+                && entryClone.getValue() instanceof Map mapCloneToUse
+            ) {
+                EngineYaml.mergeMaps(mapOriginToOverride, mapCloneToUse);
+            } else {
+                mapOrigin.put(entryClone.getKey(), entryClone.getValue());
+            }
+        }
     }
 
     @Override

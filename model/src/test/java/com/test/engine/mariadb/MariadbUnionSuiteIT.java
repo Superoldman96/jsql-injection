@@ -1,15 +1,14 @@
-package com.test.engine.clickhouse;
+package com.test.engine.mariadb;
 
 import com.jsql.model.InjectionModel;
 import com.jsql.model.exception.JSqlException;
 import com.jsql.view.subscriber.SubscriberLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.RepeatedTest;
+import org.junitpioneer.jupiter.RetryingTest;
 
-@SuppressWarnings("java:S2699")
-class ClickhouseUnionSuiteIT extends ConcreteClickhouseSuiteIT {
-
+class MariadbUnionSuiteIT extends ConcreteMariadbSuiteIT {
+    
     @Override
     public void setupInjection() throws Exception {
         InjectionModel model = new InjectionModel();
@@ -18,7 +17,7 @@ class ClickhouseUnionSuiteIT extends ConcreteClickhouseSuiteIT {
         model.subscribe(new SubscriberLogger(model));
 
         model.getMediatorUtils().parameterUtil().initQueryString(
-            "http://localhost:8080/clickhouse?name="
+            "http://localhost:8080/mariadb?name="
         );
 
         model.setIsScanning(true);
@@ -26,42 +25,40 @@ class ClickhouseUnionSuiteIT extends ConcreteClickhouseSuiteIT {
         model
         .getMediatorUtils()
         .preferencesUtil()
-        .withIsCheckingAllURLParam(false)
-        .withCountLimitingThreads(2)  // for perf only, can throw MEMORY_LIMIT_EXCEEDED
-        .withIsStrategyBlindBinDisabled(true)  // Time disabled no required: sleep 5s > 3s max on clickhouse
-        .withIsStrategyBlindBitDisabled(true);
+        .withIsStrategyTimeDisabled(true)
+        .withIsStrategyBlindBinDisabled(true)
+        .withIsStrategyBlindBitDisabled(true)
+        .withIsStrategyErrorDisabled(true);
 
         model
         .getMediatorUtils()
         .connectionUtil()
         .withMethodInjection(model.getMediatorMethod().getQuery())
         .withTypeRequest("GET");
-        
+
         model.beginInjection();
     }
     
     @Override
-    @RepeatedTest(3)
+    @RetryingTest(3)
     public void listDatabases() throws JSqlException {
-        // Default run fails because table error_log not returned by jdbc,
-        // then run succeed on retry
         super.listDatabases();
     }
     
     @Override
-    @RepeatedTest(3)
+    @RetryingTest(3)
     public void listTables() throws JSqlException {
         super.listTables();
     }
     
     @Override
-    @RepeatedTest(3)
+    @RetryingTest(3)
     public void listColumns() throws JSqlException {
         super.listColumns();
     }
     
     @Override
-    @RepeatedTest(3)
+    @RetryingTest(3)
     public void listValues() throws JSqlException {
         super.listValues();
     }

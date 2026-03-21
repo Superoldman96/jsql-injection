@@ -91,6 +91,17 @@ public class JdbcRestController {
         );
     }
 
+    @RequestMapping("/mariadb")
+    public Greeting greetingMariadb(@RequestParam(value="name") String name) throws ClassNotFoundException {
+        String inject = name.replace(":", "\\:");
+        return this.getGreeting(
+            SpringApp.get("mariadb").getProperty(JdbcSettings.JAKARTA_JDBC_URL),
+            SpringApp.get("mariadb").getProperty(JdbcSettings.JAKARTA_JDBC_USER),
+            SpringApp.get("mariadb").getProperty(JdbcSettings.JAKARTA_JDBC_PASSWORD),
+            "select schema_name from information_schema.schemata where '1' = '" + inject + "'"
+        );
+    }
+
     @RequestMapping("/mckoi")  // no dialect
     public Greeting greetingMckoi(@RequestParam(value="name") String name) {
         String inject = name.replace(":", "\\:");

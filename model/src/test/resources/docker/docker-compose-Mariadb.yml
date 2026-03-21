@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+
+  mariadb:
+    container_name: jsql-mariadb
+    image: mariadb
+    privileged: true
+    command: --port=3310
+    ports:
+      - "3310:3310"
+    environment:
+      MARIADB_ROOT_PASSWORD: my-secret-pw
+    networks:
+      - jsql-network
+
+networks:
+  jsql-network:

@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class ModelYaml implements Serializable {
 
     private String engine = StringUtils.EMPTY;
+    private String clone = StringUtils.EMPTY;
     private Resource resource = new Resource();
     private Strategy strategy = new Strategy();
 
@@ -17,6 +18,14 @@ public class ModelYaml implements Serializable {
 
     public void setEngine(String engine) {
         this.engine = engine;
+    }
+
+    public String getClone() {
+        return this.clone;
+    }
+
+    public void setClone(String clone) {
+        this.clone = clone;
     }
 
     public Resource getResource() {

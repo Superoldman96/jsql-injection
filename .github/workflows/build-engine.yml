@@ -66,7 +66,7 @@ jobs:
       - name: Build project container
         run: docker build -t jsql:latest --build-arg JSQL_DOCKERFILE -f $DOCKER_RESOURCES/Dockerfile.jsql .
 
-      - name: Integration tests
+      - name: Integration tests with docker network
         if: ${{ env.NAME_ENGINE != 'Duckdb' }}
         # profile tests-engine: generic configuration
         # profile tests-$NAME_ENGINE: specific configuration when required
@@ -79,7 +79,7 @@ jobs:
               -DtestProfile=$NAME_ENGINE
           "
 
-      - name: Integration tests
+      - name: Integration tests without docker network
         if: ${{ env.NAME_ENGINE == 'Duckdb' }}
         run: |
           $DOCKER_RESOURCES/scripts/run-on-docker-no-network.sh "

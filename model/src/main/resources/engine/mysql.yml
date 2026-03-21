@@ -272,8 +272,9 @@ strategy:
     - tidb
    orderByErrorMessage:
     - Unknown column '1337' in 'order clause'
-   # disambiguation with binary(): if() introduced to sqlite in v3.48.0.0
-   engineSpecific: if(${test}, binary('a'), 'b')=binary('a')
+   # binary() disambiguation: if() introduced to sqlite in v3.48.0.0
+   # any_value() disambiguation from mariadb
+   engineSpecific: if(${test}, binary('a'), any_value(0))=binary('a')
 
  union:
   indices: union select ${indices}

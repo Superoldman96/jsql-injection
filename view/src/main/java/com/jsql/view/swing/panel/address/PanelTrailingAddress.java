@@ -4,16 +4,13 @@ import com.jsql.model.injection.strategy.AbstractStrategy;
 import com.jsql.model.injection.strategy.StrategyError;
 import com.jsql.model.injection.engine.model.Engine;
 import com.jsql.model.injection.engine.model.yaml.Method;
-import com.jsql.util.CookiesUtil;
 import com.jsql.util.I18nUtil;
 import com.jsql.util.LogLevelUtil;
-import com.jsql.util.ParameterUtil;
 import com.jsql.view.swing.panel.PanelAddressBar;
 import com.jsql.view.swing.text.JToolTipI18n;
 import com.jsql.view.swing.util.I18nViewUtil;
 import com.jsql.view.swing.util.MediatorHelper;
 import com.jsql.view.swing.util.UiUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,15 +18,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class PanelTrailingAddress extends JPanel {
@@ -47,7 +38,6 @@ public class PanelTrailingAddress extends JPanel {
     private final JLabel labelTarget = new JLabel(UiUtil.ARROW_DOWN.getIcon(), SwingConstants.LEFT);
     private final JLabel labelEngine = new JLabel(UiUtil.ARROW_DOWN.getIcon(), SwingConstants.LEFT);
     private final JLabel labelStrategy = new JLabel(UiUtil.ARROW_DOWN.getIcon(), SwingConstants.LEFT);
-    private final JPopupMenu popupMenuTargets = new JPopupMenu();
     private ButtonGroup groupRadio = new ButtonGroup();
     private final JPopupMenu popupMenuEngines = new JPopupMenu();
     private final JPopupMenu popupMenuStrategies = new JPopupMenu();
@@ -166,7 +156,7 @@ public class PanelTrailingAddress extends JPanel {
         });
 
         this.labelTarget.setText(PanelTrailingAddress.PARAM_AUTO);
-        this.labelTarget.addMouseListener(new TargetMouseAdapter(panelAddressBar));
+        this.labelTarget.addMouseListener(new TargetMouseAdapter(this, panelAddressBar));
 
         this.add(this.labelTarget);
         this.add(this.labelEngine);
@@ -308,157 +298,6 @@ public class PanelTrailingAddress extends JPanel {
         }
     }
 
-    private class TargetMouseAdapter extends MouseAdapter {
-
-        private final PanelAddressBar panelAddressBar;
-
-        public TargetMouseAdapter(PanelAddressBar panelAddressBar) {
-            this.panelAddressBar = panelAddressBar;
-        }
-
-        @Override
-        public void mousePressed(MouseEvent event) {
-            PanelTrailingAddress.this.popupMenuTargets.removeAll();
-            JRadioButtonMenuItem menuParamAuto = new JRadioButtonMenuItem(PanelTrailingAddress.PARAM_AUTO);
-            menuParamAuto.setActionCommand(PanelTrailingAddress.PARAM_AUTO);  // mock required when adding star: @ParameterUtil.controlInput
-            menuParamAuto.addActionListener(actionEvent ->
-                PanelTrailingAddress.this.labelTarget.setText(menuParamAuto.getText())
-            );
-            PanelTrailingAddress.this.popupMenuTargets.add(menuParamAuto);
-
-            var rawQuery = this.panelAddressBar.getTextFieldAddress().getText().trim();
-            var rawRequest = this.panelAddressBar.getTextFieldRequest().getText().trim();
-            var rawHeader = this.panelAddressBar.getTextFieldHeader().getText().trim();
-
-            var selection = PanelTrailingAddress.this.groupRadio.getSelection();
-            String selectionCommand;  // effectively final
-            if (selection != null) {
-                selectionCommand = selection.getActionCommand();
-            } else {
-                selectionCommand = StringUtils.EMPTY;
-            }
-            PanelTrailingAddress.this.groupRadio = new ButtonGroup();
-            PanelTrailingAddress.this.groupRadio.add(menuParamAuto);
-            JMenu menuQuery = new JMenu("Query");
-            if (!rawQuery.isEmpty()) {
-                try {
-                    rawQuery = !rawQuery.matches("(?i)^\\w+://.*") ? "http://"+ rawQuery : rawQuery;
-                    var url = new URI(rawQuery).toURL();
-                    if (url.getQuery() != null) {
-                        this.buildMenu(url.getQuery(), ParameterUtil.PREFIX_COMMAND_QUERY, selectionCommand, menuQuery);
-                    }
-                } catch (IllegalArgumentException | MalformedURLException | URISyntaxException e) {
-                    LOGGER.log(LogLevelUtil.CONSOLE_ERROR, "Incorrect URL: {}", e.getMessage());
-                    return;
-                }
-            }
-
-            JMenu menuRequest = new JMenu("Request");
-            if (!rawRequest.isEmpty()) {
-                this.buildMenu(rawRequest, ParameterUtil.PREFIX_COMMAND_REQUEST, selectionCommand, menuRequest);
-            }
-
-            JMenu menuHeader = new JMenu("Header");
-            if (!rawHeader.isEmpty()) {
-                this.buildMenuHeader(rawHeader, selectionCommand, menuHeader);
-            }
-
-            Arrays.stream(PanelTrailingAddress.this.popupMenuTargets.getComponents())
-                .map(JComponent.class::cast)
-                .forEach(c -> c.setEnabled(false));
-            menuParamAuto.setEnabled(true);
-            if (PanelTrailingAddress.this.groupRadio.getSelection() == null) {
-                menuParamAuto.setSelected(true);
-                PanelTrailingAddress.this.labelTarget.setText(menuParamAuto.getText());
-            }
-            menuQuery.setEnabled(menuQuery.getMenuComponentCount() > 0);
-            menuRequest.setEnabled(menuRequest.getMenuComponentCount() > 0);
-            menuHeader.setEnabled(menuHeader.getMenuComponentCount() > 0);
-
-            if (
-                menuQuery.getMenuComponentCount() > 0
-                || menuRequest.getMenuComponentCount() > 0
-                || menuHeader.getMenuComponentCount() > 0
-            ) {
-                Arrays.stream(PanelTrailingAddress.this.popupMenuTargets.getComponents())
-                    .map(JComponent.class::cast)
-                    .forEach(JComponent::updateUI);  // required: incorrect when dark/light mode switch
-                PanelTrailingAddress.this.popupMenuTargets.updateUI();  // required: incorrect when dark/light mode switch
-                SwingUtilities.invokeLater(() -> {  // reduce flickering on linux
-                    PanelTrailingAddress.this.popupMenuTargets.show(event.getComponent(), event.getComponent().getX(), 5 + event.getComponent().getY() + event.getComponent().getHeight());
-                    PanelTrailingAddress.this.popupMenuTargets.setLocation(event.getComponent().getLocationOnScreen().x, 5 + event.getComponent().getLocationOnScreen().y + event.getComponent().getHeight());
-                });
-            } else {
-                LOGGER.log(LogLevelUtil.CONSOLE_ERROR, "Missing parameter to inject");
-            }
-        }
-
-        private void buildMenuHeader(String rawHeader, String selectionCommand, JMenu menuHeader) {
-            var listHeaders = Pattern.compile("\\\\r\\\\n")
-                .splitAsStream(rawHeader)
-                .map(keyValue -> Arrays.copyOf(keyValue.split(":"), 2))
-                .map(keyValue -> new AbstractMap.SimpleEntry<>(
-                    keyValue[0],
-                    keyValue[1] == null ? StringUtils.EMPTY : keyValue[1]
-                ))
-                .toList();
-            listHeaders.forEach(entry -> {
-                JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(entry.getKey());
-                menuItem.setSelected((ParameterUtil.PREFIX_COMMAND_HEADER + entry.getKey()).equals(selectionCommand));
-                menuItem.setActionCommand(ParameterUtil.PREFIX_COMMAND_HEADER + entry.getKey());
-                menuItem.addActionListener(actionEvent ->
-                    PanelTrailingAddress.this.labelTarget.setText(entry.getKey())
-                );
-                groupRadio.add(menuItem);
-                menuHeader.add(menuItem);
-            });
-            if (listHeaders.stream().anyMatch(s -> CookiesUtil.COOKIE.equalsIgnoreCase(s.getKey()))) {
-                var cookies = listHeaders.stream()
-                    .filter(s -> CookiesUtil.COOKIE.equalsIgnoreCase(s.getKey()))
-                    .findFirst()
-                    .orElse(new AbstractMap.SimpleEntry<>(CookiesUtil.COOKIE, ""));
-                if (!cookies.getValue().trim().isEmpty()) {
-                    JMenu menuCookie = new JMenu(CookiesUtil.COOKIE);
-                    String[] cookieValues = StringUtils.split(cookies.getValue(), ";");
-                    Stream.of(cookieValues).forEach(cookie -> {
-                        String[] cookieEntry = StringUtils.split(cookie, "=");
-                        JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(cookieEntry[0].trim());
-                        menuItem.setSelected((ParameterUtil.PREFIX_COMMAND_COOKIE + cookieEntry[0].trim()).equals(selectionCommand));
-                        menuItem.setActionCommand(ParameterUtil.PREFIX_COMMAND_COOKIE + cookieEntry[0].trim());
-                        menuItem.addActionListener(actionEvent ->
-                            PanelTrailingAddress.this.labelTarget.setText(cookieEntry[0].trim())
-                        );
-                        groupRadio.add(menuItem);
-                        menuCookie.add(menuItem);
-                    });
-                    menuHeader.addSeparator();
-                    menuHeader.add(menuCookie);
-                }
-            }
-            PanelTrailingAddress.this.popupMenuTargets.add(menuHeader);
-        }
-
-        private void buildMenu(String rawParams, String prefixCommand, String selectionCommand, JMenu menu) {
-            Pattern.compile("&").splitAsStream(rawParams)
-            .map(keyValue -> Arrays.copyOf(keyValue.split("="), 2))
-            .map(keyValue -> new AbstractMap.SimpleEntry<>(
-                keyValue[0],
-                keyValue[1] == null ? StringUtils.EMPTY : keyValue[1]
-            ))
-            .forEach(entry -> {
-                JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(entry.getKey());
-                menuItem.setSelected((prefixCommand + entry.getKey()).equals(selectionCommand));
-                menuItem.setActionCommand(prefixCommand + entry.getKey());
-                menuItem.addActionListener(actionEvent ->
-                    PanelTrailingAddress.this.labelTarget.setText(entry.getKey())
-                );
-                PanelTrailingAddress.this.groupRadio.add(menuItem);
-                menu.add(menuItem);
-            });
-            PanelTrailingAddress.this.popupMenuTargets.add(menu);
-        }
-    }
-    
 
     // Getter and setter
 
@@ -470,7 +309,15 @@ public class PanelTrailingAddress extends JPanel {
         return this.buttonStart;
     }
 
+    public JLabel getLabelTarget() {
+        return this.labelTarget;
+    }
+
     public ButtonGroup getGroupRadio() {
         return this.groupRadio;
+    }
+
+    public void setGroupRadio(ButtonGroup groupRadio) {
+        this.groupRadio = groupRadio;
     }
 }

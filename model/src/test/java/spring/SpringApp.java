@@ -130,6 +130,7 @@ public class SpringApp {
     }
 
     private static void initDuckdb() throws SQLException {
+        LOGGER.info("Starting Duckdb...");
         Connection conn = DriverManager.getConnection("jdbc:duckdb:jsql-duckdb-its.db");
         Statement stmt = conn.createStatement();
         stmt.execute("drop table if exists main.items");
