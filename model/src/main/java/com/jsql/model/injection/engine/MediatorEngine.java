@@ -143,16 +143,16 @@ public class MediatorEngine {
         this.virtuoso = new Engine(new EngineYaml("virtuoso.yml", injectionModel));
 
         this.engines = Arrays.asList(
-            this.auto, this.access, this.altibase, this.clickhouse, ctreeace, this.cubrid, this.db2, this.derby, this.duckdb, this.exasol, this.firebird,
+            this.auto, this.access, this.altibase, ctreeace, this.clickhouse, this.cubrid, this.db2, this.derby, this.duckdb, this.exasol, this.firebird,
             frontbase, this.h2, this.hana, this.hsqldb, this.informix, ingres, iris, maxdb, this.mckoi, this.mimer, this.monetdb,
             this.mysql, this.neo4j, netezza, nuodb, this.oracle, this.postgres, this.presto, this.spanner, this.sqlite, this.sqlserver,
             this.sybase, teradata, this.vertica, this.virtuoso
         );
         this.enginesForFingerprint = Arrays.asList(  // Add sortIndex
-            this.mysql, this.postgres, this.sqlite, this.h2, this.hsqldb, this.oracle, this.sqlserver, this.spanner, this.access, this.altibase,
+            this.mysql, this.postgres, this.sqlite, this.h2, this.hsqldb, this.oracle, this.sqlserver, this.spanner, this.duckdb, this.altibase,
             ctreeace, this.cubrid, this.db2, this.derby, this.exasol, this.firebird, frontbase, this.hana, this.informix, ingres, iris, maxdb,
             this.mckoi, this.mimer, this.monetdb, this.neo4j, netezza, nuodb, this.presto, this.sybase, teradata, this.vertica, this.virtuoso,
-            this.duckdb, this.clickhouse
+            this.clickhouse, this.access
         );
 
         this.engine = this.mysql;

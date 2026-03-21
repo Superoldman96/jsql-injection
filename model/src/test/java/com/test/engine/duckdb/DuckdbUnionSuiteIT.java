@@ -25,6 +25,7 @@ class DuckdbUnionSuiteIT extends ConcreteDuckdbSuiteIT {
         model
         .getMediatorUtils()
         .preferencesUtil()
+        .withCountLimitingThreads(2)
         .withIsStrategyBlindBinDisabled(true)
         .withIsStrategyBlindBitDisabled(true)
         .withIsStrategyErrorDisabled(true);

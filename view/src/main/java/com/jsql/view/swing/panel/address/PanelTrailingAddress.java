@@ -44,7 +44,7 @@ public class PanelTrailingAddress extends JPanel {
 
     private JMenu itemRadioStrategyError;
 
-    private final JLabel labelTarget = new JLabel(UiUtil.TARGET.getIcon(), SwingConstants.LEFT);
+    private final JLabel labelTarget = new JLabel(UiUtil.ARROW_DOWN.getIcon(), SwingConstants.LEFT);
     private final JLabel labelEngine = new JLabel(UiUtil.ARROW_DOWN.getIcon(), SwingConstants.LEFT);
     private final JLabel labelStrategy = new JLabel(UiUtil.ARROW_DOWN.getIcon(), SwingConstants.LEFT);
     private final JPopupMenu popupMenuTargets = new JPopupMenu();
