@@ -50,7 +50,6 @@ jobs:
           ./buildContainerImage.sh -v 18.4.0 -x
 
       - name: Mount databases
-        if: ${{ env.NAME_ENGINE != 'Duckdb' }}
         run: |
           docker compose -f $DOCKER_RESOURCES/docker-compose-$NAME_ENGINE.yml build --parallel
           docker compose -f $DOCKER_RESOURCES/docker-compose-$NAME_ENGINE.yml up -d
