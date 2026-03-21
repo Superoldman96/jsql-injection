@@ -1,20 +1,15 @@
 package com.test.engine.duckdb;
 
-import com.jsql.model.accessible.DataAccess;
 import com.test.AbstractTestSuite;
 import org.hibernate.cfg.JdbcSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import spring.SpringApp;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public abstract class ConcreteDuckdbSuiteIT extends AbstractTestSuite {
 
+    // Concurrency disabled in workflow actions: SQLException: Binder Error: Unique file handle conflict:
+    // Cannot attach "jsql-duckdb-its" - the database file "/model/jsql-duckdb-its.db" is already attached by database "jsql-duckdb-its"
     public ConcreteDuckdbSuiteIT() {
         var property = SpringApp.get("duckdb");
         this.jdbcURL = property.getProperty(JdbcSettings.JAKARTA_JDBC_URL);

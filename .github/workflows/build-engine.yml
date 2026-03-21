@@ -50,6 +50,7 @@ jobs:
           ./buildContainerImage.sh -v 18.4.0 -x
 
       - name: Mount databases
+        if: ${{ env.NAME_ENGINE != 'Duckdb' }}
         run: |
           docker compose -f $DOCKER_RESOURCES/docker-compose-$NAME_ENGINE.yml build --parallel
           docker compose -f $DOCKER_RESOURCES/docker-compose-$NAME_ENGINE.yml up -d
@@ -58,6 +59,7 @@ jobs:
         run: docker images && docker container ls
 
       - name: Database health checks and configuration
+        if: ${{ env.NAME_ENGINE != 'Duckdb' }}
         run: |
           $DOCKER_RESOURCES/scripts/healthcheck/healthcheck.sh $NAME_ENGINE
 

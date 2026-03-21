@@ -25,7 +25,6 @@ class DuckdbErrorSuiteIT extends ConcreteDuckdbSuiteIT {
         model
         .getMediatorUtils()
         .preferencesUtil()
-        .withCountLimitingThreads(2)
         .withIsStrategyBlindBinDisabled(true)
         .withIsStrategyBlindBitDisabled(true)
         .withIsStrategyUnionDisabled(true);

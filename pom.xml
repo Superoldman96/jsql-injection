@@ -95,6 +95,7 @@
                     **/*Altibase*SuiteIT.java,
                     **/*Clickhouse*SuiteIT.java,
                     **/*Db2*SuiteIT.java,
+                    **/*Duckdb*SuiteIT.java,
                     **/*Exasol*SuiteIT.java,
                     **/*Hana*SuiteIT.java,
                     **/*Mimer*SuiteIT.java,
@@ -111,6 +112,12 @@
         </profile>
         <profile>
             <id>tests-Mimer</id>
+            <properties>
+                <parallel.enabled>false</parallel.enabled>
+            </properties>
+        </profile>
+        <profile>
+            <id>tests-Duckdb</id>
             <properties>
                 <parallel.enabled>false</parallel.enabled>
             </properties>
