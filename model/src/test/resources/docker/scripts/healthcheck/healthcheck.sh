@@ -155,6 +155,10 @@ function Lamp-Postgres {  # shellcheck disable=SC2317
   docker exec -i jsql-lamp psql 'postgresql://postgres:my-secret-pw@localhost' -c "select 'jsqlValue' as jsqlColumn"
 }  # correct status 1 on error
 
+function Mariadb {  # shellcheck disable=SC2317
+  docker exec -i jsql-mariadb mariadb -uroot -pmy-secret-pw -e "select 'jsqlValue' as jsqlColumn"
+}  # correct status 1 on error
+
 function Mimer {  # shellcheck disable=SC2317
   cat <<EOF | docker exec -i jsql-mimer bsql -u SYSADM -p SYSADM
     select 'jsqlValue' as jsqlColumn from (values(0));
