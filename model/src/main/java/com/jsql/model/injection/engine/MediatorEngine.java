@@ -151,7 +151,7 @@ public class MediatorEngine {
             this.sybase, teradata, this.vertica, this.virtuoso
         );
         this.enginesForFingerprint = Arrays.asList(  // Add sortIndex
-            this.mysql, this.postgres, this.sqlite, this.h2, this.hsqldb, this.oracle, this.sqlserver, this.spanner, this.duckdb, this.mariadb,
+            this.mariadb, this.mysql, this.postgres, this.sqlite, this.h2, this.hsqldb, this.oracle, this.sqlserver, this.spanner, this.duckdb,
             this.altibase, ctreeace, this.cubrid, this.db2, this.derby, this.exasol, this.firebird, frontbase, this.hana, this.informix, ingres,
             iris, maxdb, this.mckoi, this.mimer, this.monetdb, this.neo4j, netezza, nuodb, this.presto, this.sybase, teradata, this.vertica,
             this.virtuoso, this.clickhouse, this.access

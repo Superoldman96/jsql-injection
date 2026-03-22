@@ -9,5 +9,5 @@ strategy:
     - mariadb
    orderByErrorMessage:
     - Unknown column '1337' in 'ORDER BY'
-   engineSpecific: if(${test}, binary('a'), 'b')=binary('a')
+   engineSpecific: if(${test} and instr(version(), 'maria') > 0, binary('a'), 'b')=binary('a')
  error:  # mariadb returns too much garbling chars

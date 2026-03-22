@@ -130,7 +130,11 @@ public class EngineYaml implements AbstractEngine {
             ) {
                 EngineYaml.mergeMaps(mapOriginToOverride, mapCloneToUse);
             } else {
-                mapOrigin.put(entryClone.getKey(), entryClone.getValue());
+                if (entryClone.getValue() == null) {  // when erasing origin value in clone yml
+                    mapOrigin.remove(entryClone.getKey());
+                } else {
+                    mapOrigin.put(entryClone.getKey(), entryClone.getValue());
+                }
             }
         }
     }
