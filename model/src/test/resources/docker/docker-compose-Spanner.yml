@@ -3,7 +3,11 @@ services:
 
   spanner:
     container_name: jsql-spanner
-    image: gcr.io/cloud-spanner-emulator/emulator
+    # issue on latest
+    # NoSuchMethodError registerLongUpDownCounter
+    # NoClassDefFoundError SubchannelMetrics
+    image: gcr.io/cloud-spanner-emulator/emulator:1.5.50
+
     ports:
       - "9010:9010"
     privileged: true  # required on local
